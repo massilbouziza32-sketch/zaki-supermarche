@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14532d">
+  <meta name="description" content="نظام إدارة ومبيعات Zaki Supermarché">
+  <title>Zaki Supermarché | نظام التسيير</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="loginView" class="login-screen">
+    <div class="login-card">
+      <div class="brand-mark">Z</div>
+      <p class="eyebrow">نظام تسيير المتجر</p>
+      <h1>Zaki Supermarché</h1>
+      <p class="muted">سجّل الدخول للمتابعة</p>
+      <form id="loginForm">
+        <label>اسم المستخدم <input id="loginUser" autocomplete="username" required placeholder="admin"></label>
+        <label>كلمة المرور <input id="loginPass" type="password" autocomplete="current-password" required placeholder="••••••••"></label>
+        <button class="btn primary full" type="submit">دخول إلى النظام</button>
+      </form>
+      <div class="demo-hint">
+        <strong>دخول تجريبي أول مرة</strong>
+        <span>admin / Admin123!</span>
+        <small>غيّر كلمة المرور فوراً. هذه نسخة أولية محلية وليست نظاماً آمناً متعدد الأجهزة.</small>
+      </div>
+    </div>
+  </div>
+
+  <div id="appView" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-brand"><div class="brand-mark small">Z</div><div><b>Zaki Supermarché</b><small>إدارة المتجر</small></div></div>
+      <div class="user-chip"><div class="avatar" id="userAvatar">A</div><div><b id="currentUserName">المدير</b><small id="currentUserRole">مدير النظام</small></div></div>
+      <nav id="mainNav">
+        <button class="nav-link active" data-page="dashboard">▦ <span>لوحة القيادة</span></button>
+        <button class="nav-link" data-page="pos">▣ <span>الكاشير والبيع</span></button>
+        <button class="nav-link" data-page="products">▤ <span>المنتجات والمخزون</span></button>
+        <button class="nav-link" data-page="purchases">＋ <span>المشتريات والتوريد</span></button>
+        <button class="nav-link" data-page="customers">♙ <span>الزبائن والكريدي</span></button>
+        <button class="nav-link" data-page="invoices">▧ <span>الفواتير والمرتجعات</span></button>
+        <button class="nav-link" data-page="reports">▥ <span>التقارير</span></button>
+        <button class="nav-link" data-page="employees" data-role="admin">♧ <span>العمال والصلاحيات</span></button>
+        <button class="nav-link" data-page="settings" data-role="admin">⚙ <span>الإعدادات</span></button>
+      </nav>
+      <button id="logoutBtn" class="nav-link logout">↪ <span>تسجيل الخروج</span></button>
+      <div class="sidebar-foot">الإصدار الأولي 1.0</div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-btn menu-toggle" id="menuToggle" aria-label="القائمة">☰</button>
+        <div><span class="muted small-text">مرحباً بك في</span><h2 id="pageTitle">لوحة القيادة</h2></div>
+        <div class="top-actions"><span class="date-pill" id="todayLabel"></span><button class="btn light" id="backupBtn">نسخة احتياطية</button></div>
+      </header>
+      <div id="notice" class="notice hidden" role="status"></div>
+      <section id="pageContent" class="page-content"></section>
+    </main>
+  </div>
+
+  <dialog id="productDialog" class="modal">
+    <form id="productForm" method="dialog">
+      <div class="modal-head"><h3 id="productDialogTitle">إضافة منتج</h3><button type="button" class="icon-btn" data-close="productDialog">×</button></div>
+      <input type="hidden" id="productId">
+      <div class="form-grid">
+        <label>اسم المنتج<input id="pName" required></label>
+        <label>الباركود<input id="pBarcode"></label>
+        <label>الصنف<select id="pCategory"><option>مواد غذائية</option><option>مشروبات</option><option>ألبان وأجبان</option><option>حلويات</option><option>الأطفال والرضع</option><option>توابل وعطارة</option><option>مواد تنظيف</option><option>أخرى</option></select></label>
+        <label>سعر الشراء (دج)<input id="pCost" type="number" min="0" step="0.01" required></label>
+        <label>سعر البيع (دج)<input id="pPrice" type="number" min="0" step="0.01" required></label>
+        <label>الكمية<input id="pQty" type="number" min="0" step="0.001" required></label>
+        <label>وحدة القياس<select id="pUnit"><option value="حبة">حبة</option><option value="كغ">كغ</option><option value="غ">غ</option><option value="لتر">لتر</option><option value="علبة">علبة</option></select></label>
+        <label>تاريخ الصلاحية<input id="pExpiry" type="date"></label>
+        <label class="wide">حد التنبيه عند النفاد<input id="pMin" type="number" min="0" value="5"></label>
+      </div>
+      <div class="modal-actions"><button class="btn light" type="button" data-close="productDialog">إلغاء</button><button class="btn primary" type="submit">حفظ المنتج</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="customerDialog" class="modal">
+    <form id="customerForm" method="dialog">
+      <div class="modal-head"><h3>إضافة زبون</h3><button type="button" class="icon-btn" data-close="customerDialog">×</button></div>
+      <div class="form-grid">
+        <label>اسم الزبون<input id="cName" required></label>
+        <label>رقم الهاتف<input id="cPhone"></label>
+        <label class="wide">ملاحظات<input id="cNote"></label>
+      </div>
+      <div class="modal-actions"><button class="btn light" type="button" data-close="customerDialog">إلغاء</button><button class="btn primary" type="submit">حفظ</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="employeeDialog" class="modal">
+    <form id="employeeForm" method="dialog">
+      <div class="modal-head"><h3>إضافة حساب عامل</h3><button type="button" class="icon-btn" data-close="employeeDialog">×</button></div>
+      <div class="form-grid">
+        <label>الاسم الكامل<input id="eName" required></label>
+        <label>اسم المستخدم<input id="eUser" required></label>
+        <label>كلمة المرور المؤقتة<input id="ePass" type="password" minlength="6" required></label>
+        <label>الدور<select id="eRole"><option value="cashier">كاشير</option><option value="stock">مسؤول مخزون</option><option value="debts">مسؤول ديون</option></select></label>
+      </div>
+      <div class="modal-actions"><button class="btn light" type="button" data-close="employeeDialog">إلغاء</button><button class="btn primary" type="submit">إنشاء الحساب</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
